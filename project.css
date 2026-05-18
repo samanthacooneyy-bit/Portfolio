@@ -54,6 +54,38 @@
     font-weight: 400;
 }
 
+/* 2-column image grid */
+.project-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.project-grid-2 img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+}
+
+/* Half-width image */
+.project-media--half {
+    max-width: 50%;
+}
+
+/* Labeled option section (Option 1:, Option 2:) */
+.project-option {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.project-label {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #000;
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 768px) {
