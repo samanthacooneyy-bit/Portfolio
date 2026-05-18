@@ -1,0 +1,72 @@
+/* ─── Shared project page styles ─── */
+
+.project {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    min-width: 0;
+}
+
+/* Project title above first image */
+.project-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.project-client {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #000;
+}
+
+.project-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000;
+}
+
+/* ─── Media ─── */
+
+.project-media {
+    width: 100%;
+}
+
+.project-media img,
+.project-media video {
+    width: 100%;
+    display: block;
+}
+
+.project-media--gray {
+    background: #e8e8e8;
+    padding: 80px;
+}
+
+/* ─── Body text ─── */
+
+.project-body {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 620px;
+    color: #000;
+    font-weight: 400;
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 768px) {
+    .project {
+        gap: 40px;
+        padding-bottom: 60px;
+    }
+
+    .project-media--gray {
+        padding: 32px 20px;
+    }
+
+    .project-body {
+        max-width: 100%;
+    }
+}
