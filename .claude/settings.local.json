@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(Rename-Item *)"
+      "PowerShell(Rename-Item *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\saman\\\\Portfolio\" -Force | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\saman\\\\Desktop\" -ErrorAction SilentlyContinue | Where-Object { $_.Name -match \"Claude|Screen|Frame 3\" } | Select-Object FullName, Name)"
     ]
   }
 }

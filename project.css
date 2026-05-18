@@ -44,6 +44,10 @@
     padding: 80px;
 }
 
+.project-media--person {
+    max-width: 45%;
+}
+
 /* ─── Body text ─── */
 
 .project-body {
@@ -54,11 +58,12 @@
     font-weight: 400;
 }
 
-/* 2-column image grid */
+/* 2-column image grid — equal crop on both images */
 .project-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+    width: 100%;
 }
 
 .project-grid-2 img {
@@ -68,9 +73,18 @@
     aspect-ratio: 4 / 3;
 }
 
-/* Half-width image */
-.project-media--half {
-    max-width: 50%;
+/* 2-column mat grid — both images same square size */
+.project-grid-mat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+}
+
+.project-grid-mat img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* Labeled option section (Option 1:, Option 2:) */
