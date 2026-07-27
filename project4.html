@@ -46,26 +46,15 @@
             </div>
 
             <!-- video -->
-            <div class="video-player" id="videoPlayer">
-                <video id="titleSeqVideo" loop playsinline poster="screenshot 2 1.jpg">
-                    <source src="FINAL2.mp4" type="video/mp4">
-                </video>
-                <div class="video-play-overlay" id="playOverlay">
-                    <div class="video-play-overlay-btn">
-                        <svg width="26" height="26" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2l10 6-10 6V2z"/></svg>
-                    </div>
-                </div>
-                <div class="video-controls">
-                    <button class="video-ctrl-btn" id="playBtn" aria-label="Play/Pause"></button>
-                    <div class="video-timeline" id="videoTimeline">
-                        <div class="video-progress" id="videoProgress"></div>
-                    </div>
-                    <div class="video-right-controls">
-                        <button class="video-ctrl-btn" id="volBtn" aria-label="Mute/Unmute"></button>
-                        <input type="range" class="video-vol-slider" id="volSlider" min="0" max="1" step="0.05" value="1">
-                        <button class="video-ctrl-btn" id="fsBtn" aria-label="Fullscreen"></button>
-                    </div>
-                </div>
+            <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;">
+                <iframe
+                    src="https://player.vimeo.com/video/1213338170?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                    style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen
+                    title="FINAL2">
+                </iframe>
             </div>
 
             <!-- storyboard row -->
@@ -102,115 +91,6 @@
 
     </div>
 
-    <script>
-    (function () {
-        var video     = document.getElementById('titleSeqVideo');
-        var playBtn   = document.getElementById('playBtn');
-        var volBtn    = document.getElementById('volBtn');
-        var volSlider = document.getElementById('volSlider');
-        var fsBtn     = document.getElementById('fsBtn');
-        var player    = document.getElementById('videoPlayer');
-        var timeline  = document.getElementById('videoTimeline');
-        var progress  = document.getElementById('videoProgress');
-
-        var PLAY_ICON    = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2l10 6-10 6V2z"/></svg>';
-        var PAUSE_ICON   = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="4" height="12" rx="1"/><rect x="9" y="2" width="4" height="12" rx="1"/></svg>';
-        var VOL_ICON     = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
-        var MUTE_ICON    = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
-        var FS_ICON      = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
-        var EXIT_FS_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></svg>';
-
-        var lastVolume = 1;
-
-        // ── Play / Pause ──
-        var overlay = document.getElementById('playOverlay');
-
-        function syncPlay() {
-            playBtn.innerHTML = video.paused ? PLAY_ICON : PAUSE_ICON;
-            player.classList.toggle('is-paused', video.paused);
-        }
-        function togglePlay() {
-            if (video.paused) { video.play(); } else { video.pause(); }
-        }
-        playBtn.addEventListener('click', togglePlay);
-        overlay.addEventListener('click', togglePlay);
-        video.addEventListener('play',  syncPlay);
-        video.addEventListener('pause', syncPlay);
-
-        // ── Volume ──
-        function updateSliderBg(val) {
-            var pct = val * 100;
-            volSlider.style.background =
-                'linear-gradient(to right, rgba(255,255,255,0.9) ' + pct + '%, rgba(255,255,255,0.28) ' + pct + '%)';
-        }
-
-        function syncVol() {
-            var muted = video.muted || video.volume === 0;
-            volBtn.innerHTML = muted ? MUTE_ICON : VOL_ICON;
-            var display = muted ? 0 : video.volume;
-            volSlider.value = display;
-            updateSliderBg(display);
-        }
-
-        volBtn.addEventListener('click', function () {
-            if (video.muted || video.volume === 0) {
-                video.muted  = false;
-                video.volume = lastVolume || 1;
-            } else {
-                lastVolume  = video.volume;
-                video.muted = true;
-            }
-            syncVol();
-        });
-
-        volSlider.addEventListener('input', function () {
-            var val = parseFloat(this.value);
-            video.volume = val;
-            video.muted  = (val === 0);
-            if (val > 0) lastVolume = val;
-            updateSliderBg(val);
-            volBtn.innerHTML = (val === 0) ? MUTE_ICON : VOL_ICON;
-        });
-
-        // ── Timeline ──
-        var seeking = false;
-
-        function updateProgress() {
-            if (video.duration) {
-                progress.style.width = (video.currentTime / video.duration * 100) + '%';
-            }
-        }
-        function seekTo(e) {
-            var rect = timeline.getBoundingClientRect();
-            var x    = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-            video.currentTime = (x / rect.width) * video.duration;
-        }
-
-        video.addEventListener('timeupdate', updateProgress);
-        timeline.addEventListener('mousedown', function (e) { seeking = true; seekTo(e); });
-        document.addEventListener('mousemove', function (e) { if (seeking) seekTo(e); });
-        document.addEventListener('mouseup',   function ()  { seeking = false; });
-        timeline.addEventListener('touchstart', function (e) { seeking = true; seekTo(e.touches[0]); }, { passive: true });
-        document.addEventListener('touchmove',  function (e) { if (seeking) seekTo(e.touches[0]); },    { passive: true });
-        document.addEventListener('touchend',   function ()  { seeking = false; });
-
-        // ── Fullscreen ──
-        fsBtn.addEventListener('click', function () {
-            if (!document.fullscreenElement) {
-                (player.requestFullscreen || player.webkitRequestFullscreen).call(player);
-            } else {
-                (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-            }
-        });
-        document.addEventListener('fullscreenchange',       function () { fsBtn.innerHTML = document.fullscreenElement       ? EXIT_FS_ICON : FS_ICON; });
-        document.addEventListener('webkitfullscreenchange', function () { fsBtn.innerHTML = document.webkitFullscreenElement ? EXIT_FS_ICON : FS_ICON; });
-
-        // ── Init ──
-        syncPlay();
-        syncVol();
-        fsBtn.innerHTML = FS_ICON;
-    }());
-    </script>
 
 </body>
 </html>
