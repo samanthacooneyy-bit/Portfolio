@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="project.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
 </head>
 <body>
 
@@ -45,8 +47,50 @@
                 <span class="project-title">Brand Design</span>
             </div>
 
-            <div class="project-media project-media--gray">
-                <video src="SPREADS VIDEO.mp4" autoplay loop muted playsinline></video>
+            <div class="project-media">
+                <div class="book-stage">
+
+                    <div class="book-hint-wrap">
+                    <div id="flipbook">
+                        <!-- Page 1 — front cover (hard) -->
+                        <div class="page hard"><img src="BOOKLET FINAL3.png"  alt="Front cover"></div>
+                        <!-- Interior pages -->
+                        <div class="page"><img src="BOOKLET FINAL4.png"  alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL5.png"  alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL6.png"  alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL7.png"  alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL8.png"  alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL9.png"  alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL10.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL11.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL12.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL13.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL14.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL15.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL16.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL17.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL18.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL19.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL20.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL21.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL22.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL23.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL24.png" alt=""></div>
+                        <div class="page"><img src="BOOKLET FINAL25.png" alt=""></div>
+                        <!-- Page 24 — back cover (hard) -->
+                        <div class="page hard"><img src="BOOKLET FINAL26.png" alt="Back cover"></div>
+                    </div>
+                    <span class="book-turn-hint book-turn-hint--left">&#8249;</span>
+                    <span class="book-turn-hint book-turn-hint--right">&#8250;</span>
+                    </div>
+
+                    <div class="book-controls">
+                        <button class="book-arrow" id="bookPrev" aria-label="Previous page" disabled>&#8249;</button>
+                        <span class="book-page-num" id="bookPageNum">1 / 24</span>
+                        <button class="book-arrow" id="bookNext" aria-label="Next page">&#8250;</button>
+                    </div>
+
+                </div>
             </div>
 
             <p class="project-body">For this project, I designed a visual identity for a silent film festival in our branding class, inspired by the expressive language of early cinema. I used punctuation as a graphic device to echo the emotions and gestures crucial to silent films. Starting with a focus on emotion and typography, I explored scale, spacing, and placement to convey meaning without words. The final concept offers a modern take on 1920s storytelling, which subtly evokes silence through form rather than stating it outright.</p>
@@ -64,6 +108,81 @@
         </main>
 
     </div>
+
+    <script>
+    $(function () {
+
+        function hideHints() {
+            $('.book-turn-hint').addClass('is-hidden');
+        }
+
+        var downX = 0;
+
+        function initBook(pageW, pageH) {
+            $('#flipbook').turn({
+                width:        pageW * 2,
+                height:       pageH,
+                autoCenter:   true,
+                display:      'double',
+                acceleration: true,
+                gradients:    true,
+                elevation:    50,
+                when: {
+                    turned: function (e, page) {
+                        syncControls(page);
+                        hideHints();
+                    }
+                }
+            });
+
+            syncControls(1);
+
+            $('#flipbook')
+                .on('mousedown', function (e) { downX = e.pageX; })
+                .on('click', function (e) {
+                    if (Math.abs(e.pageX - downX) > 8) return;
+                    var halfW  = $(this).width() / 2;
+                    var clickX = e.pageX - $(this).offset().left;
+                    if (clickX > halfW) { $(this).turn('next'); }
+                    else                { $(this).turn('previous'); }
+                });
+        }
+
+        var probe = new Image();
+
+        probe.onload = function () {
+            var ratio  = this.naturalHeight / this.naturalWidth;
+            var stageW = document.querySelector('.book-stage').offsetWidth;
+            var pageW  = Math.floor(stageW / 2);
+            var pageH  = Math.floor(pageW * ratio);
+            initBook(pageW, pageH);
+        };
+
+        probe.onerror = function () {
+            var stageW = document.querySelector('.book-stage').offsetWidth;
+            var pageW  = Math.floor(stageW / 2);
+            var pageH  = Math.floor(pageW * (4 / 3));
+            initBook(pageW, pageH);
+        };
+
+        probe.src = 'BOOKLET FINAL3.png';
+
+        function syncControls(page) {
+            var total = $('#flipbook').turn('pages');
+            $('#bookPageNum').text(page + ' / ' + total);
+            $('#bookPrev').prop('disabled', page <= 1);
+            $('#bookNext').prop('disabled', page >= total);
+            var $wrap = $('.book-hint-wrap');
+            $wrap.removeClass('book-hint-wrap--cover book-hint-wrap--backcover');
+            if (page <= 1)     { $wrap.addClass('book-hint-wrap--cover'); }
+            if (page >= total) { $wrap.addClass('book-hint-wrap--backcover'); }
+        }
+
+        $('#bookNext').on('click', function () { $('#flipbook').turn('next'); hideHints(); });
+        $('#bookPrev').on('click', function () { $('#flipbook').turn('previous'); hideHints(); });
+
+    });
+    </script>
 
 </body>
 </html>
